@@ -16,6 +16,7 @@ class OrdersTableViewController: UITableViewController {
         super.viewDidLoad()
 
         self.navigationItem.hidesBackButton = true
+        self.navigationItem.title = "My Orders"
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(showAddPage))
 
