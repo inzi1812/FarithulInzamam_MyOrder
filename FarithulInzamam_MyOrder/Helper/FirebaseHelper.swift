@@ -29,28 +29,32 @@ class FirebaseHelper
     }
     
     
-    func addOrder(order : Order) {
+    func addOrder(order : Order) -> Bool {
         
         do
         {
             let _ = try firestore.collection("Orders").addDocument(from: order)
             print("Ordered Succesfully")
+            return true
         }
         catch let err
         {
             print("Error while Accessing Database \(err)")
+            return false
         }
         
     }
     
-    func editOrder(order : Order)
+    func editOrder(order : Order) -> Bool
     {
         
         do {
             try firestore.collection("Orders").document(order.id!).setData(from: order)
             print("Order updated")
+            return true
         } catch let err {
             print("Error while Accessing Database \(err)")
+            return false
         }
         
     }

@@ -30,6 +30,9 @@ class OrderViewController: UIViewController {
     
     var isInitialLoad = true
     
+    
+    private let DEFAULT_ORDER = Order(id: nil, quantity: -1, type: .original, size: .small, date: Date())
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -75,7 +78,6 @@ class OrderViewController: UIViewController {
     private func loadInitialData()
     {
         
-
         //Set Field Values
         quantittyTextField.text = order.quantity != -1 ? "\(order.quantity)" : nil
         coffeeTypeLabel.text = order.type.rawValue
@@ -176,16 +178,50 @@ class OrderViewController: UIViewController {
         
         order.quantity = quantity
 
+        var isSuccess = false
+        
+        var alert : UIAlertController
         
         if isEditingOrder
         {
-            FirebaseHelper.getInstance().editOrder(order: self.order)
+            isSuccess = FirebaseHelper.getInstance().editOrder(order: self.order)
+            
+            if isSuccess
+            {
+                alert = UIAlertController(title: "Success", message: "Order Edited Successfully", preferredStyle: .alert)
+            }
+            else
+            {
+                alert = UIAlertController(title: "Failure", message: "Error Processing Your Request", preferredStyle: .alert)
+            }
+            
         }
         else
         {
             order.date = Date() //To set th Time at the point of Ordering
-            FirebaseHelper.getInstance().addOrder(order: self.order)
+            
+            isSuccess = FirebaseHelper.getInstance().addOrder(order: self.order)
+            
+            if isSuccess
+            {
+                alert = UIAlertController(title: "Success", message: "Order Placed Successfully", preferredStyle: .alert)
+                
+                
+                self.order = DEFAULT_ORDER
+                self.loadInitialData()
+            }
+            else
+            {
+                alert = UIAlertController(title: "Failure", message: "Error Processing Your Request", preferredStyle: .alert)
+            }
+            
         }
+        
+        
+        
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        
+        self.present(alert, animated: true, completion: nil)
     }
     
     
